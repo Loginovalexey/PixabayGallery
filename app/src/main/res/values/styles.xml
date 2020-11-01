@@ -1,0 +1,30 @@
+<resources>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="textInputStyle">@style/AppTextField</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxBackgroundColor">@color/colorPrimaryLight</item>
+
+    </style>
+<!--    <style name="editTextStyle" parent="Widget.AppCompat.EditText">-->
+<!--        <item name="background">@color/colorPrimaryLight</item>-->
+<!--    </style>-->
+
+    <style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+        <item name="elevation">4dp</item>
+    </style>
+
+
+</resources>

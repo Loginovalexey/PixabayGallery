@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">PixabayViewer</string>
+    <string name="imageTypeChoiceText">Consider image type</string>
+    <string name="orientationChoiceText">Take orientation</string>
+    <string name="categoryChoiceText">Consider category</string>
+    <string name="orderChoiceText">Specify sorting</string>
+    <string name="search">Search</string>
+    <string name="callRequestPermissionsAgain">Permission is required to save the file.</string>
+    <string name="errorLoadImage">Failed to upload image.</string>
+    <string name="wallpaperSet">Wallpaper set</string>
+    <string name="wallpaperNotSet">Could not set wallpaper</string>
+    <string name="share">Send</string>
+    <string name="imageSaved">Image Saved</string>
+    <string name="imageNotSaved">Failed to save image.</string>
+    <string name="about">About</string>
+    <string name="Exit">Exit</string>
+    <string name="Settings">Settings</string>
+    <string name="select_language">Choose a search language</string>
+    <string name="theme">Choose a theme</string>
+    <string name="summary_theme">Light / Dark</string>
+    <string name="colorChoice">Choose a color</string>
+    <string name="editorChoice">"Editor's choice"</string>
+    <string name="safeСontent">Safe Content</string>
+    <string name="error">Error</string>
+    <string name="serverIsNotResponding">Server is not responding</string>
+    <string name="searchLanguage">Search language</string>
+    <string name="fileForWallPaper">fileForWallPaper.jpg</string>
+    <string name="fileForShare">fileForShare.jpg</string>
+    <string name="emptyResult">нет данных для отображения</string>
+    <string name="allDataLoaded">All data loaded</string>
+</resources>

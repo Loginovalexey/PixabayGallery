@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="imageTypeText">
+        <item>Фото</item>
+        <item>Иллюстрации</item>
+        <item>Векторная графика</item>
+    </string-array>
+
+    <string-array name="orientationText">
+        <item>Вертикальная</item>
+        <item>Горизонтальная</item>
+    </string-array>
+
+    <string-array name="categoryText">
+        <item>Фоновые изображения</item>
+        <item>Мода</item>
+        <item>Природа</item>
+        <item>Наука</item>
+        <item>Образование</item>
+        <item>Эмоции</item>
+        <item>Здоровье</item>
+        <item>Люди</item>
+        <item>Религия</item>
+        <item>Места</item>
+        <item>Животные</item>
+        <item>промышленность</item>
+        <item>Компьютер</item>
+        <item>Еда</item>
+        <item>Спорт</item>
+        <item>Транспорт</item>
+        <item>Путешествия</item>
+        <item>Здания</item>
+        <item>Бизнес</item>
+        <item>Музыка</item>
+    </string-array>
+
+    <string-array name="colorText">
+        <item>Градации серого</item>
+        <item>Прозрачный</item>
+        <item>Красный</item>
+        <item>Оранжевый</item>
+        <item>Желтый</item>
+        <item>Зеленый</item>
+        <item>Бирюзовый</item>
+        <item>Синий</item>
+        <item>Сиреневый</item>
+        <item>Розовый</item>
+        <item>Белый</item>
+        <item>Серый</item>
+        <item>Черный</item>
+        <item>Коричневый</item>
+    </string-array>
+
+    <string-array name="orderText">
+        <item>по популярности</item>
+        <item>по новизне</item>
+    </string-array>
+
+    <string-array name="order">
+        <item>popular</item>
+        <item>latest</item>
+    </string-array>
+
+</resources>

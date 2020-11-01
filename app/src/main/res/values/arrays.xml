@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="imageTypeText">
+        <item>Photo</item>
+        <item>Illustration</item>
+        <item>Vector graphics</item>
+    </string-array>
+
+    <string-array name="imageType">
+        <item>photo</item>
+        <item>illustration</item>
+        <item>vector</item>
+    </string-array>
+
+    <string-array name="orientationText">
+        <item>Vertical</item>
+        <item>Horizontal</item>
+    </string-array>
+
+    <string-array name="orientation">
+        <item>vertical</item>
+        <item>horizontal</item>
+    </string-array>
+
+    <string-array name="categoryText">
+        <item>Background Images</item>
+        <item>Fashion</item>
+        <item>Nature</item>
+        <item>Science</item>
+        <item>Education</item>
+        <item>Emotions</item>
+        <item>Health</item>
+        <item>People</item>
+        <item>Religion</item>
+        <item>Места</item>
+        <item>Animals</item>
+        <item>Industry</item>
+        <item>Computer</item>
+        <item>Food</item>
+        <item>Sport</item>
+        <item>Transport</item>
+        <item>Travel</item>
+        <item>Buildings</item>
+        <item>Business</item>
+        <item>Music</item>
+    </string-array>
+
+    <string-array name="category">
+        <item>backgrounds</item>
+        <item>fashion</item>
+        <item>nature</item>
+        <item>science</item>
+        <item>education</item>
+        <item>feelings</item>
+        <item>health</item>
+        <item>people</item>
+        <item>religion</item>
+        <item>places</item>
+        <item>animals</item>
+        <item>industry</item>
+        <item>computer</item>
+        <item>food</item>
+        <item>sports</item>
+        <item>transportation</item>
+        <item>travel</item>
+        <item>buildings</item>
+        <item>business</item>
+        <item>music</item>
+    </string-array>
+
+    <string-array name="color">
+        <item>grayscale</item>
+        <item>transparent</item>
+        <item>red</item>
+        <item>orange</item>
+        <item>yellow</item>
+        <item>green</item>
+        <item>turquoise</item>
+        <item>blue</item>
+        <item>lilac</item>
+        <item>pink</item>
+        <item>white</item>
+        <item>gray</item>
+        <item>black</item>
+        <item>brown</item>
+    </string-array>
+
+    <string-array name="colorText">
+        <item>Grayscale</item>
+        <item>Transparent</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Turquoise</item>
+        <item>Blue</item>
+        <item>Lilac</item>
+        <item>Pink</item>
+        <item>White</item>
+        <item>Gray</item>
+        <item>Black</item>
+        <item>Brown</item>
+    </string-array>
+
+    <string-array name="colorRgb">
+        <item>#8C8C8C</item>
+        <item>#8C8C8C</item>
+        <item>#D32F2F</item>
+        <item>#F57C00</item>
+        <item>#FBC02D</item>
+        <item>#388E3C</item>
+        <item>#0097A7</item>
+        <item>#303F9F</item>
+        <item>#7B1FA2</item>
+        <item>#FF95BF</item>
+        <item>#FFFFFF</item>
+        <item>#8C8C8C</item>
+        <item>#000000</item>
+        <item>#982F0E</item>
+    </string-array>
+
+    <string-array name="orderText">
+        <item>Popular</item>
+        <item>Latest</item>
+    </string-array>
+
+    <string-array name="order">
+        <item>popular</item>
+        <item>latest</item>
+    </string-array>
+
+</resources>
