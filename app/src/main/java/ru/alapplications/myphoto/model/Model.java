@@ -8,12 +8,14 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import ru.alapplications.myphoto.app.App;
 import ru.alapplications.myphoto.model.entities.Hit;
+import ru.alapplications.myphoto.model.entities.SearchOptions;
 
 public class Model {
-    private List<Hit> hits;
-    private Integer   selectedIndex;
-    private boolean   needReload = false;
-    private int       loadedCount;
+    private List<Hit>     hits;
+    private Integer       selectedIndex;
+    private boolean       needReload = false;
+    private int           loadedCount;
+    private SearchOptions searchOptions;
 
     public int getLoadedCount ( ) {
         return loadedCount;
@@ -22,7 +24,6 @@ public class Model {
     public void setLoadedCount ( int loadedCount ) {
         this.loadedCount = loadedCount;
     }
-
 
     public boolean isNeedReload ( ) {
         return needReload;
@@ -50,7 +51,12 @@ public class Model {
         return selectedIndex;
     }
 
-
+    public void reset ( ) {
+        hits = null;
+        selectedIndex = 0;
+        needReload = false;
+        loadedCount = 0;
+    }
     private void checkDuplicates ( ) {
 
         if ( hits.size ( ) > 0 ) {
@@ -71,10 +77,11 @@ public class Model {
         }
     }
 
-    public void reset ( ) {
-        hits = null;
-        selectedIndex = 0;
-        needReload = false;
-        loadedCount = 0;
+    public SearchOptions getSearchOptions ( ) {
+        return searchOptions;
+    }
+
+    public void setSearchOptions ( SearchOptions searchOptions ) {
+        this.searchOptions = searchOptions;
     }
 }

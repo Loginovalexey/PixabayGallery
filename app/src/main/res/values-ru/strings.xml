@@ -1,29 +1,27 @@
 <resources>
-    <string name="app_name">PixabayViewer</string>
-    <string name="imageTypeChoiceText">Учитывать тип изображения</string>
-    <string name="orientationChoiceText">Учитывать ориентацию</string>
-    <string name="categoryChoiceText">Учитывать категорию</string>
-    <string name="orderChoiceText">Указать сортировку</string>
+
+    <!--    Gallery screen-->
     <string name="search">Поиск</string>
-    <string name="callRequestPermissionsAgain">Для сохранения файла необходимо разрешение</string>
-    <string name="errorLoadImage">Не удалось загрузить изображение</string>
-    <string name="wallpaperSet">Обои установлены</string>
-    <string name="wallpaperNotSet">Не удалось установить обои</string>
-    <string name="share">Отправить:</string>
-    <string name="imageSaved">Изображение сохранено</string>
-    <string name="imageNotSaved">Не удалось сохранить изображение</string>
-    <string name="about">О программе</string>
-    <string name="Exit">Выход</string>
-    <string name="Settings">Настройки</string>
-    <string name="select_language">Выбрать язык:</string>
-    <string name="theme">Выбрать тему</string>
-    <string name="summary_theme">Светлая/Темная</string>
+    <string name="error">Ошибка</string>
+    <string name="serverIsNotResponding">Нет ответа от сервера. Проверьте соединение. </string>
+    <string name="emptyResult">Нет данных для отображения</string>
+
+    <!--    Search screen-->
+
+    <string name="imageTypeChoice">Учитывать тип изображения</string>
+    <string name="orientationChoice">Учитывать ориентацию</string>
+    <string name="categoryChoice">Учитывать категорию</string>
     <string name="colorChoice">Выбор цвета</string>
     <string name="editorChoice">Выбор редакции</string>
-    <string name="safeСontent">Безопасный контент</string>
-    <string name="error">Ошибка</string>
-    <string name="serverIsNotResponding">Нет ответа от сервера</string>
-    <string name="searchLanguage">Язык поиска</string>
-    <string name="emptyResult">Нет данных для отображения</string>
-    <string name="allDataLoaded">Все данные загружены</string>
+    <string name="safeSearchChoice">Безопасный контент</string>
+    <string name="orderChoice">Указать сортировку</string>
+
+    <!--    Detailed screen-->
+    <string name="uploadFileExplanation">Для сохранения файла необходимо разрешение</string>
+    <string name="wallpaperSet">Обои установлены</string>
+    <string name="wallpaperNotSet">Не удалось установить обои</string>
+    <string name="imageSaved">Изображение сохранено</string>
+    <string name="failedUpload">Не удалось загрузить изображение</string>
+    <string name="failedShare">Не удалось отправить файл.</string>
+
 </resources>

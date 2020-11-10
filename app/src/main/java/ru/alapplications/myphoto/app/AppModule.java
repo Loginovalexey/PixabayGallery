@@ -1,19 +1,12 @@
 package ru.alapplications.myphoto.app;
 
-import android.app.Application;
-
-import androidx.room.Room;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.alapplications.myphoto.db.MyPhotoDao;
-import ru.alapplications.myphoto.db.MyPhotoDatabase;
 import ru.alapplications.myphoto.model.Model;
-import ru.alapplications.myphoto.model.SearchOptions;
-import ru.alapplications.myphoto.ui.galleryFragment.presenter.CacheHelper;
-import ru.alapplications.myphoto.ui.galleryFragment.presenter.ServerHelper;
+import ru.alapplications.myphoto.ui.gallery.viewmodel.ServerHelper;
+
 
 @Module
 class AppModule {
@@ -25,7 +18,6 @@ class AppModule {
     App provideApp ( ) {
         return App.getInstance ( );
     }
-
 
 
     @Singleton
@@ -46,10 +38,5 @@ class AppModule {
         return new ServerHelper ( );
     }
 
-    @Singleton
-    @Provides
-    SearchOptions provideSearchOptions ( ) {
-        return new SearchOptions ( );
-    }
 
 }

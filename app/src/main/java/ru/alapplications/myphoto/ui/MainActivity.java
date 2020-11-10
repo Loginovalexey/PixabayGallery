@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import ru.alapplications.myphoto.R;
-import ru.alapplications.myphoto.ui.detailFragment.view.DetailFragment;
-import ru.alapplications.myphoto.ui.galleryFragment.view.GalleryFragment;
-import ru.alapplications.myphoto.ui.searchFragment.view.SearchFragment;
-import ru.alapplications.myphoto.ui.wallPaperFragment.WallPaperFragment;
-
+import ru.alapplications.myphoto.ui.detail.view.DetailFragment;
+import ru.alapplications.myphoto.ui.gallery.view.GalleryFragment;
+import ru.alapplications.myphoto.ui.search.view.SearchFragment;
+import ru.alapplications.myphoto.ui.wallpaper.WallPaperFragment;
 
 public class MainActivity extends AppCompatActivity implements
         OnSearchScreenCall,
@@ -21,89 +20,84 @@ public class MainActivity extends AppCompatActivity implements
         OnWallPaperScreenCall,
         OnMessage {
 
-    Dialog dialog;
-
-
-    private void addFragmentToContainer ( Fragment fragment ) {
-        getSupportFragmentManager ( )
-                .beginTransaction ( )
-                .replace ( R.id.mainActivityRootFrameLayout , fragment )
-                .addToBackStack ( null )
-                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
-                .commit ( );
-    }
-
-    private void replaceFragmentInContainer ( Fragment fragment ) {
-        getSupportFragmentManager ( )
-                .beginTransaction ( )
-                .replace ( R.id.mainActivityRootFrameLayout , fragment )
-                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
-                .commit ( );
-    }
+    private Dialog dialog;
 
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         setTheme ( R.style.AppTheme );
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.activity_main );
-        replaceFragmentInContainer ( GalleryFragment.getInstance ( ) );
+        if ( savedInstanceState == null ) callStartFragment();
+
     }
 
-    @Override
-    public void callDetailScreen ( ) {
-        addFragmentToContainer ( DetailFragment.newInstance ( ) );
+    private void callStartFragment ( ) {
+        getSupportFragmentManager ( )
+                .beginTransaction ( )
+                .replace ( R.id.galleryLayout , GalleryFragment.getInstance () )
+                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
+                .commit ( );
     }
-
 
     @Override
     public void callSearchScreen ( ) {
 
-        addFragmentToContainer ( SearchFragment.newInstance ( ) );
-
-//        getSupportFragmentManager ( )
-//                .beginTransaction ( )
-//                .replace ( R.id.mainActivityRootFrameLayout , SearchFragment.newInstance ( ) )
-//                .addToBackStack ( null )
-//                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
-//                .commit ( );
-//    }
-
-//    @Override
-//    public void onBackPressed ( ) {
-//        Log.d ( App.TAG , getSupportFragmentManager ( ).getFragments ( ).toString ( ) );
-//        if ( (getSupportFragmentManager ( ).getFragments ( ).size ( ) == 1) &&
-//                (getSupportFragmentManager ( ).getFragments ( ).get ( 0 ) instanceof SearchFragment)
-//        ) {
-//            getSupportFragmentManager ( )
-//                    .beginTransaction ( )
-//                    .replace ( R.id.mainActivityRootFrameLayout , GalleryFragment.getInstance () )
-//                    .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
-//                    .commit ( );
-//        } else {
-//            super.onBackPressed ( );
-//        }
-//
+        addFragment ( SearchFragment.getInstance ( ) );
     }
 
     @Override
-    public void simpleMessage ( String title , String message ) {
+    public void callDetailScreen ( ) {
+
+        addFragment ( DetailFragment.getInstance ( ) );
+    }
+
+    @Override
+    public void callWallPaperScreen ( ) {
+
+        addFragment ( WallPaperFragment.newInstance ( ) );
+    }
+
+    private void addFragment ( Fragment fragment ) {
+        getSupportFragmentManager ( )
+                .beginTransaction ( )
+                .replace ( R.id.galleryLayout , fragment )
+                .addToBackStack ( null )
+                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
+                .commit ( );
+    }
+
+    @Override
+    public void showMessage ( String title , String message , OnDialogResponse onDialogResponse ) {
+        removeOldDialogIfExist ( );
+        createNewDialog ( title , message );
+        showDialog ( );
+        setDialogClickListener ( onDialogResponse );
+    }
+
+    private void removeOldDialogIfExist ( ) {
         if ( dialog != null ) dialog.cancel ( );
+    }
+
+    private void createNewDialog ( String title , String message ) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder ( this );
-        alertDialogBuilder.setTitle ( title )
+        alertDialogBuilder
+                .setTitle ( title )
                 .setMessage ( message )
-                .setPositiveButton ( "Ok" , ( dialog , id ) -> dialog.cancel ( ) );
+                .setPositiveButton ( "Ok" , ( dialogInterface , i ) -> {
+                    dialogInterface.dismiss ( );
+                } );
         dialog = alertDialogBuilder.create ( );
+    }
+
+    private void showDialog ( ) {
         dialog.show ( );
     }
 
-    @Override
-    public void callWallPaper ( ) {
-        addFragmentToContainer ( WallPaperFragment.newInstance ( ) );
-//        getSupportFragmentManager ( )
-//                .beginTransaction ( )
-//                .replace ( R.id.mainActivityRootFrameLayout , WallPaperFragment.newInstance ( ) )
-//                .addToBackStack ( null )
-//                .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
-//                .commit ( );
+    private void setDialogClickListener ( OnDialogResponse onDialogResponse ) {
+        dialog.setOnDismissListener ( dialogInterface -> {
+            if ( onDialogResponse != null ) onDialogResponse.onOkButton ( );
+            else dialogInterface.cancel ( );
+        } );
     }
+
 }

@@ -1,5 +1,5 @@
 package ru.alapplications.myphoto.ui;
 
 public interface OnMessage {
-    void simpleMessage ( String title , String message );
+    void showMessage ( String title , String message, OnDialogResponse onDialogResponse );
 }

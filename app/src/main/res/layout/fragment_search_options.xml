@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/searchRootLinearLayout"
+    android:id="@+id/searchLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -24,6 +24,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/searchCardView"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -38,22 +39,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
-                    android:paddingStart="16dp"
-                    android:text="@string/search" />
+                    android:paddingStart="16dp" />
 
             </androidx.cardview.widget.CardView>
 
-            <View
-                android:id="@+id/divider7"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/imageTypeСheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/imageTypeChoiceText" />
+                android:text="@string/imageTypeChoice" />
 
             <Spinner
                 android:id="@+id/imageTypeSpinner"
@@ -62,17 +58,13 @@
                 android:layout_marginStart="16dp"
                 android:entries="@array/imageTypeText" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/orientationCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/orientationChoiceText" />
+                android:text="@string/orientationChoice" />
 
             <RadioGroup
                 android:id="@+id/orientationRadioGroup"
@@ -82,17 +74,13 @@
 
             </RadioGroup>
 
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/categoryCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/categoryChoiceText" />
+                android:text="@string/categoryChoice" />
 
             <Spinner
                 android:id="@+id/categorySpinner"
@@ -101,11 +89,7 @@
                 android:layout_marginStart="16dp"
                 android:entries="@array/categoryText" />
 
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/colorsCheckBox"
@@ -119,11 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp" />
 
-            <View
-                android:id="@+id/divider4"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/editorsChoiceCheckBox"
@@ -131,29 +111,21 @@
                 android:layout_height="wrap_content"
                 android:text="@string/editorChoice" />
 
-            <View
-                android:id="@+id/divider5"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/safeSearchCheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/safeСontent" />
+                android:text="@string/safeSearchChoice" />
 
-            <View
-                android:id="@+id/divider6"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="?android:attr/listDivider" />
+            <include layout="@layout/divider"/>
 
             <CheckBox
                 android:id="@+id/orderСheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/orderChoiceText" />
+                android:text="@string/orderChoice" />
 
             <RadioGroup
                 android:id="@+id/orderRadioGroup"
@@ -162,6 +134,8 @@
                 android:layout_marginStart="16dp">
 
             </RadioGroup>
+
+            <include layout="@layout/divider"/>
 
         </LinearLayout>
     </ScrollView>

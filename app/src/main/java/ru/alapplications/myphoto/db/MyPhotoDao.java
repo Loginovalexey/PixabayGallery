@@ -12,7 +12,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 import ru.alapplications.myphoto.model.entities.Hit;
-import ru.alapplications.myphoto.ui.galleryFragment.presenter.TotalInfo;
+import ru.alapplications.myphoto.model.entities.TotalInfo;
 
 @Dao
 public abstract class MyPhotoDao {
@@ -40,7 +40,7 @@ public abstract class MyPhotoDao {
 
     @Transaction
     public List<Long> clearDbTableAndCacheHits ( List<Hit> hits , TotalInfo totalHits ) {
-        deleteAllHits ( );
+        //deleteAllHits ( );
         setTotalHits ( totalHits );
         return cacheHits ( hits );
     }

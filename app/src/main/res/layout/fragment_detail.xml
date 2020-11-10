@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detailItemLinearLayout"
+    android:id="@+id/detailLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -15,46 +15,41 @@
 
     </ru.alapplications.myphoto.ui.detailFragment.view.HackyProblematicPager>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/detailDownLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:animateLayoutChanges="true"
+        android:background="@color/colorPrimaryInvisible"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:visibility="visible">
 
-        <LinearLayout
-            android:id="@+id/detailDownLayout"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/downloadImageView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:background="@color/colorPrimaryInvisible"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="16dp">
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_outline_save_24"
+            tools:ignore="NestedWeights,VectorDrawableCompat" />
 
-            <ImageView
-                android:id="@+id/downloadImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_outline_save_24"
-                tools:ignore="NestedWeights" />
+        <ImageView
+            android:id="@+id/setWallPaperImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_outline_wallpaper_24"
+            tools:ignore="VectorDrawableCompat" />
 
-            <ImageView
-                android:id="@+id/setWallPaperImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_outline_wallpaper_24" />
-
-            <ImageView
-                android:id="@+id/shareImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_outline_share_24" />
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/shareImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_outline_share_24"
+            tools:ignore="VectorDrawableCompat" />
+    </LinearLayout>
 
 </FrameLayout>
 
