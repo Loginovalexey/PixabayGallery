@@ -2,26 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.alapplications.myphoto">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
-
-
     <application
-        android:requestLegacyExternalStorage="true"
-        android:name=".app.App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/appName"
+        android:name=".app.App"
+        android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.Launcher"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:fullBackupContent="@xml/backup_descriptor">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

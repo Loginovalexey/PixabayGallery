@@ -1,25 +1,46 @@
 package ru.alapplications.myphoto.model.entities;
 
+import android.annotation.SuppressLint;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.google.gson.annotations.Expose;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-
-import ru.alapplications.myphoto.model.entities.Hit;
 
 
+/**
+ * Класс с дополнительной информацией, используется для кэширования
+ * Содержит данные о максимально возможном количестве изображений для загрузки, переданном сервером.
+ * Также содержит дату создания кэша для проверки на актуальность
+ */
+
+@SuppressWarnings("ALL")
 @Entity(tableName = "totalInfo")
 public class TotalInfo {
+    //Таблица состоит из одной записи
+    @PrimaryKey()
+    @Expose
+    private Integer index = 1;
 
-    @PrimaryKey(autoGenerate = false)
-    public Integer index = 1;
+    //Максимально возможное количество изображений для загрузки
+    @SuppressWarnings("FieldMayBeFinal")
+    @Expose
+    private final Integer totalHits;
 
-    public Integer totalHits;
+    //Дата создания кэша
+    @Expose
+    private String date;
 
-    public String date;
+    public TotalInfo ( int totalHits ) {
+        @SuppressLint("SimpleDateFormat")
+        DateFormat dateFormat = new SimpleDateFormat ( "dd/MM/yyyy" );
+        this.totalHits = totalHits;
+        date = dateFormat.format ( new Date ( ) );
+    }
 
     public String getDate ( ) {
         return date;
@@ -27,13 +48,6 @@ public class TotalInfo {
 
     public void setDate ( String date ) {
         this.date = date;
-    }
-
-
-    public TotalInfo ( int totalHits ) {
-        DateFormat dateFormat = new SimpleDateFormat ( "dd/MM/yyyy" );
-        this.totalHits = totalHits;
-        date = dateFormat.format ( new Date ( ) );
     }
 
     public Integer getIndex ( ) {
@@ -44,13 +58,8 @@ public class TotalInfo {
         this.index = index;
     }
 
-
     public Integer getTotalHits ( ) {
         return totalHits;
-    }
-
-    public void setTotalHits ( Integer totalHits ) {
-        this.totalHits = totalHits;
     }
 
 }

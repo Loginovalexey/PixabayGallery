@@ -1,6 +1,9 @@
 package ru.alapplications.myphoto.ui;
 
-public interface OnDetailScreenCall {
 
+/**
+ * Интерфейс для вызова экрана увеличенного изображения
+ */
+public interface OnDetailScreenCall {
     void callDetailScreen ( );
 }

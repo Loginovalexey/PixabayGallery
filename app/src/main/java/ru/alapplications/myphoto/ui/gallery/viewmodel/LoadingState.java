@@ -1,5 +1,17 @@
 package ru.alapplications.myphoto.ui.gallery.viewmodel;
 
+/**
+ * Статусы загрузки
+ */
 public enum LoadingState {
-    WAITING,OK,FIRST_LOAD_ERROR,ERROR,NO_MORE_DATA;
+    //Ожидание
+    WAITING,
+    //Успех
+    OK,
+    //Ошибка при загрузке первой страницы
+    FIRST_LOAD_ERROR,
+    //Ошибка при загрузке очередной страницы
+    LOAD_ERROR,
+    //Нет данных
+    EMPTY_DATA
 }

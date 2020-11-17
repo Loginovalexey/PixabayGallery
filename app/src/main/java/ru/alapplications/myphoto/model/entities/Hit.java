@@ -1,36 +1,47 @@
 package ru.alapplications.myphoto.model.entities;
 
-import android.graphics.Bitmap;
-
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
+import kotlin.jvm.Transient;
+
+
+/**
+ * Класс для хранения данных об изображении.
+ * В базе данных в таблице hits хранится список объектов для кэширования
+ */
 @Entity(tableName = "hits")
 public class Hit {
-
+    //Автоматически присваемые индексы для упорядоченного хранения данных в соответствии с
+    //очередностью загрузки
     @PrimaryKey(autoGenerate = true)
-    @SerializedName("index")
     @Expose
     private Integer index;
-    @SerializedName("id")
+    //Уникальный идентификатор изображения
     @Expose
     private Integer id;
-    @SerializedName("pageURL")
-    @Expose
-    private String  pageURL;
-    @SerializedName("previewURL")
+    //Ссылка для скачивания миниатюры изображения
     @Expose
     private String  previewURL;
-    @SerializedName("largeImageURL")
+    //Ссылка для скачивания полноразмерного изображения
     @Expose
     private String  largeImageURL;
-
+    //Служебное поле-флаг для определения отрасовано изображение или нет
+    @Transient
+    @Ignore
     private Boolean isLoaded = false;
 
+
+    public Integer getIndex ( ) {
+        return index;
+    }
+
+    public void setIndex ( Integer index ) {
+        this.index = index;
+    }
 
     public Integer getId ( ) {
         return id;
@@ -38,14 +49,6 @@ public class Hit {
 
     public void setId ( Integer id ) {
         this.id = id;
-    }
-
-    public String getPageURL ( ) {
-        return pageURL;
-    }
-
-    public void setPageURL ( String pageURL ) {
-        this.pageURL = pageURL;
     }
 
     public String getPreviewURL ( ) {
@@ -64,15 +67,7 @@ public class Hit {
         this.largeImageURL = largeImageURL;
     }
 
-    public Integer getIndex ( ) {
-        return index;
-    }
-
-    public void setIndex ( Integer index ) {
-        this.index = index;
-    }
-
-    public Boolean getIsLoaded(){ return isLoaded;}
+    public Boolean isLoaded (){ return isLoaded;}
 
     public void setIsLoaded(Boolean isLoaded){this.isLoaded = isLoaded;}
 

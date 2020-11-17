@@ -1,80 +1,96 @@
 package ru.alapplications.myphoto.model;
 
-import android.util.Log;
-
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
-import ru.alapplications.myphoto.app.App;
 import ru.alapplications.myphoto.model.entities.Hit;
 import ru.alapplications.myphoto.model.entities.SearchOptions;
 
-public class Model {
-    private List<Hit>     hits;
-    private Integer       selectedIndex;
-    private boolean       needReload = false;
-    private int           loadedCount;
-    private SearchOptions searchOptions;
 
-    public int getLoadedCount ( ) {
-        return loadedCount;
+/**
+ * Класс модели. Используется для хранения, операций и обмена данными
+ */
+
+public class Model {
+    /**
+     * Массив с данными об изображениях. Размер определяется максимальным количеством доступных для
+     * загрузки изображений. Содержит как инициализированные(загруженные) записи,
+     * так и null-элементы(данные еще не загружены)
+     */
+    private volatile List<Hit>     hits;
+    /**
+     * Реальный размер массива - размер загруженных данных
+     */
+    private          int           loadedCount;
+    /**
+     * Индекс выбранного изображения
+     */
+    private          Integer       currentIndex;
+    /**
+     * Флаг необходимости сброса данных (используется при установки новых параметров поиска)
+     */
+    private          boolean       needReload;
+    /**
+     * Флаг необходимости сохранения кэша (при обновлении данных)
+     */
+
+    private boolean needSaveCache = false;
+
+    /**
+     * Параметры поиска
+     */
+    private          SearchOptions searchOptions;
+
+
+    public Model ( ) {
+        reset ();
     }
 
-    public void setLoadedCount ( int loadedCount ) {
+    public void reset ( ) {
+        hits = null;
+        currentIndex = 0;
+        needReload = false;
+        loadedCount = 0;
+        needSaveCache = false;
+    }
+
+    public void setHits ( List<Hit> hits, int loadedCount ) {
+        this.hits = hits;
         this.loadedCount = loadedCount;
+    }
+
+    public int getHitsSize ( ) {
+        return hits.size ();
+    }
+
+    public List<Hit> getLoadedHits ( ) {
+        if (hits!=null)
+            return hits.subList ( 0 , loadedCount );
+        else
+            return null;
+    }
+
+    public boolean isNeedSaveCache ( ) {
+        return needSaveCache;
+    }
+
+    public void setNeedSaveCache ( boolean needSaveCache ) {
+        this.needSaveCache = needSaveCache;
     }
 
     public boolean isNeedReload ( ) {
         return needReload;
     }
 
-    public void setNeedReload ( boolean needReload ) {
-        this.needReload = needReload;
-    }
-
-    public void setHits ( List<Hit> hits ) {
-        this.hits = hits;
-        Log.d ( App.TAG , "setHits" );
-        checkDuplicates ( );
-    }
-
-    public List<Hit> getHits ( ) {
-        return hits;
-    }
-
     public void setCurrentIndex ( Integer index ) {
-        selectedIndex = index;
+        currentIndex = index;
+    }
+
+    public String getCurrentHitId ( ) {
+        return hits.get ( currentIndex ).getId ( ) + "";
     }
 
     public Integer getCurrentIndex ( ) {
-        return selectedIndex;
-    }
-
-    public void reset ( ) {
-        hits = null;
-        selectedIndex = 0;
-        needReload = false;
-        loadedCount = 0;
-    }
-    private void checkDuplicates ( ) {
-
-        if ( hits.size ( ) > 0 ) {
-            Single.create ( emitter -> {
-                for (int i = 0; i < hits.size ( ) - 1; i++) {
-                    for (int j = i + 1; j < hits.size ( ); j++) {
-                        if ( hits.get ( i ) != null && hits.get ( j ) != null && hits.get ( i ).getId ( ).equals ( hits.get ( j ).getId ( ) ) ) {
-                            Log.d ( App.TAG , i + "," + j + ":Id: " + hits.get ( i ).getId ( ) );
-                        }
-                    }
-                }
-                emitter.onSuccess ( true );
-            } )
-                    .observeOn ( Schedulers.io ( ) )
-                    .subscribeOn ( Schedulers.io ( ) )
-                    .subscribe ( result -> Log.d ( App.TAG , "-----------------" ) );
-
-        }
+        return currentIndex;
     }
 
     public SearchOptions getSearchOptions ( ) {
@@ -83,5 +99,6 @@ public class Model {
 
     public void setSearchOptions ( SearchOptions searchOptions ) {
         this.searchOptions = searchOptions;
+        needReload = true;
     }
 }

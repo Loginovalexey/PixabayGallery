@@ -7,48 +7,57 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.theartofdev.edmodo.cropper.CropImageView
-        android:id="@+id/cropImageView"
+    <FrameLayout
+        android:id="@+id/cropFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        tools:ignore="MissingClass" />
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+
+        <com.theartofdev.edmodo.cropper.CropImageView
+            android:id="@+id/cropImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            tools:ignore="MissingClass" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/wallPaperDownLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:animateLayoutChanges="true"
         android:background="@color/colorPrimaryInvisible"
         android:orientation="horizontal"
-        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="16dp">
 
         <ImageView
-            android:id="@+id/rotateImageView"
-            android:layout_width="match_parent"
+            android:id="@+id/rotate"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_outline_rotate_left_24" />
+            app:srcCompat="@drawable/ic_outline_rotate_left_24"
+            tools:ignore="VectorDrawableCompat" />
 
         <ImageView
-            android:id="@+id/ratioImageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/setRatio"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_baseline_fullscreen_24" />
+            app:srcCompat="@drawable/ic_baseline_fullscreen_24"
+            tools:ignore="VectorDrawableCompat" />
 
         <ImageView
-            android:id="@+id/toCropImageView"
-            android:layout_width="match_parent"
+            android:id="@+id/сrop"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_outline_crop_24" />
 
         <ImageView
-            android:id="@+id/setWallPaperImageView"
-            android:layout_width="match_parent"
+            android:id="@+id/setWallPaper"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_outline_insert_photo_24" />

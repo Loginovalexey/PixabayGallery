@@ -8,36 +8,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ru.alapplications.myphoto.ui.detailFragment.view.HackyProblematicPager
+    <ru.alapplications.myphoto.ui.detail.view.ZoomablelePager
         android:id="@+id/detailViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-    </ru.alapplications.myphoto.ui.detailFragment.view.HackyProblematicPager>
+    </ru.alapplications.myphoto.ui.detail.view.ZoomablelePager>
 
     <LinearLayout
         android:id="@+id/detailDownLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_gravity="bottom"
         android:animateLayoutChanges="true"
         android:background="@color/colorPrimaryInvisible"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:visibility="visible">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/downloadImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_outline_save_24"
             tools:ignore="NestedWeights,VectorDrawableCompat" />
 
         <ImageView
-            android:id="@+id/setWallPaperImageView"
+            android:id="@+id/setWallPaper"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_outline_wallpaper_24"
             tools:ignore="VectorDrawableCompat" />
@@ -45,7 +42,7 @@
         <ImageView
             android:id="@+id/shareImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:srcCompat="@drawable/ic_outline_share_24"
             tools:ignore="VectorDrawableCompat" />

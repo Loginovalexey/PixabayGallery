@@ -1,16 +1,17 @@
 <resources>
 
 <!--    Application-->
-    <string name="appName" translatable="false">PixabayViewer</string>
+    <string name="appName" translatable="false">Pixabay Finder</string>
 
 <!--    Gallery screen-->
     <string name="search">Search</string>
     <string name="error">Error</string>
-    <string name="serverIsNotResponding">Server is not responding</string>
-    <string name="emptyResult">No data to display</string>
+    <string name="noConnection">No connection</string>
+    <string name="nothingFound">Nothing found</string>
+    <string name="tryOtherSearchParameters">Try other search parameters</string>
+    <string name="pixabayPage" translatable="false">http://www.pixabay.com</string>
 
 <!--    Search screen-->
-
     <string name="imageTypeChoice">Consider image type</string>
     <string name="orientationChoice">Take orientation</string>
     <string name="categoryChoice">Consider category</string>
@@ -26,5 +27,10 @@
     <string name="imageSaved">Image Saved</string>
     <string name="failedUpload">Failed to save image.</string>
     <string name="failedShare">Failed to share image.</string>
+
+<!--    WallPaper screen-->
+    <string name="settingWallpaper">Wallpaper setting</string>
+    <string name="cropImage">Crop the image to the desired size</string>
+
 
 </resources>

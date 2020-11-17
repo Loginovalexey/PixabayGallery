@@ -5,16 +5,21 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import ru.alapplications.myphoto.model.entities.Hit;
 
+/**
+ * Класс для оптимизации прокрутки списка.
+ * Элементы сравниваются по id
+ */
+
 public class HitDiffUtilCallback extends DiffUtil.ItemCallback<Hit> {
 
     @Override
     public boolean areItemsTheSame ( @NonNull Hit oldItem , @NonNull Hit newItem ) {
-        return oldItem.getId ( ) == newItem.getId ( );
+        return oldItem.getId ( ).equals ( newItem.getId ( ));
     }
 
     @Override
     public boolean areContentsTheSame ( @NonNull Hit oldItem , @NonNull Hit newItem ) {
-        return oldItem.getId ( ) == newItem.getId ( );
+        return oldItem.getId ().equals ( newItem.getId ( ));
     }
 
 }

@@ -3,8 +3,9 @@
     <!--    Gallery screen-->
     <string name="search">Поиск</string>
     <string name="error">Ошибка</string>
-    <string name="serverIsNotResponding">Нет ответа от сервера. Проверьте соединение. </string>
-    <string name="emptyResult">Нет данных для отображения</string>
+    <string name="noConnection">Нет соединения</string>
+    <string name="nothingFound">Ничего не найдено</string>
+    <string name="tryOtherSearchParameters">Попробуйте другие условия поиска</string>
 
     <!--    Search screen-->
 
@@ -22,6 +23,10 @@
     <string name="wallpaperNotSet">Не удалось установить обои</string>
     <string name="imageSaved">Изображение сохранено</string>
     <string name="failedUpload">Не удалось загрузить изображение</string>
-    <string name="failedShare">Не удалось отправить файл.</string>
+    <string name="failedShare">Не удалось отправить файл</string>
+
+    <!--    WallPaper screen-->
+    <string name="settingWallpaper">Установка обоев</string>
+    <string name="cropImage">Обрежьте изображение до нужных размеров</string>
 
 </resources>

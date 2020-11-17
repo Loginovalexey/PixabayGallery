@@ -14,12 +14,16 @@ import ru.alapplications.myphoto.ui.gallery.view.GalleryFragment;
 import ru.alapplications.myphoto.ui.search.view.SearchFragment;
 import ru.alapplications.myphoto.ui.wallpaper.WallPaperFragment;
 
+/**
+ * Главная активити
+ */
 public class MainActivity extends AppCompatActivity implements
         OnSearchScreenCall,
         OnDetailScreenCall,
         OnWallPaperScreenCall,
         OnMessage {
 
+    //Переменная для показа диалогов
     private Dialog dialog;
 
     @Override
@@ -27,45 +31,57 @@ public class MainActivity extends AppCompatActivity implements
         setTheme ( R.style.AppTheme );
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.activity_main );
-        if ( savedInstanceState == null ) callStartFragment();
+        //При запуске приложения - размещение стартового фрагмента
+        if ( savedInstanceState == null ) callStartFragment ( );
 
     }
 
+    //Стартовый фрагмент - фрагмент галереи
     private void callStartFragment ( ) {
         getSupportFragmentManager ( )
                 .beginTransaction ( )
-                .replace ( R.id.galleryLayout , GalleryFragment.getInstance () )
+                .replace ( R.id.rootLayout , GalleryFragment.getInstance ( ) )
                 .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
                 .commit ( );
     }
 
+    //Размещение в активити фрагмента параметров поиска
     @Override
     public void callSearchScreen ( ) {
-
         addFragment ( SearchFragment.getInstance ( ) );
     }
 
+    //Размещение в активити фрагмента увеличенного изображения
     @Override
     public void callDetailScreen ( ) {
-
         addFragment ( DetailFragment.getInstance ( ) );
     }
 
+    //Размещение в активити фрагмента установки обоев
     @Override
     public void callWallPaperScreen ( ) {
 
         addFragment ( WallPaperFragment.newInstance ( ) );
     }
 
+    //Добавление вызываемого фрагмента в стек
     private void addFragment ( Fragment fragment ) {
         getSupportFragmentManager ( )
                 .beginTransaction ( )
-                .replace ( R.id.galleryLayout , fragment )
+                .replace ( R.id.rootLayout , fragment )
                 .addToBackStack ( null )
                 .setTransition ( FragmentTransaction.TRANSIT_FRAGMENT_FADE )
                 .commit ( );
     }
 
+
+    /**
+     * Показ диалога
+     *
+     * @param title            - заголовок диалогового окна
+     * @param message          - сообщение
+     * @param onDialogResponse - колбэк при нажатии на кнопку
+     */
     @Override
     public void showMessage ( String title , String message , OnDialogResponse onDialogResponse ) {
         removeOldDialogIfExist ( );
@@ -83,9 +99,8 @@ public class MainActivity extends AppCompatActivity implements
         alertDialogBuilder
                 .setTitle ( title )
                 .setMessage ( message )
-                .setPositiveButton ( "Ok" , ( dialogInterface , i ) -> {
-                    dialogInterface.dismiss ( );
-                } );
+                .setPositiveButton ( "Ok" , ( dialogInterface , i ) ->
+                        dialogInterface.dismiss ( ) );
         dialog = alertDialogBuilder.create ( );
     }
 
@@ -99,5 +114,4 @@ public class MainActivity extends AppCompatActivity implements
             else dialogInterface.cancel ( );
         } );
     }
-
 }

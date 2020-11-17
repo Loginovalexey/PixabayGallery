@@ -2,12 +2,17 @@ package ru.alapplications.myphoto.app;
 
 import android.app.Application;
 
-import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
+import ru.alapplications.myphoto.app.di.AppComponent;
+import ru.alapplications.myphoto.app.di.AppModule;
+import ru.alapplications.myphoto.app.di.DaggerAppComponent;
 
 
+/**
+ * Класс приложения
+ */
 public class App extends Application {
-    public static final String TAG = "PixabayViewer";
     private static App          instance;
     private static AppComponent appComponent;
 
@@ -17,19 +22,11 @@ public class App extends Application {
 
     public void onCreate ( ) {
         super.onCreate ( );
-
-        //Fabric.with ( this, new Crashlytics( ) );
-
-        if ( LeakCanary.isInAnalyzerProcess ( this ) ){
-            return;
-        }
-        LeakCanary.install ( this );
-
-        Stetho.initializeWithDefaults(this);
-
         instance = this;
         appComponent = generateAppComponent ( );
+        FirebaseCrashlytics.getInstance();
     }
+
 
     private AppComponent generateAppComponent ( ) {
         return DaggerAppComponent
@@ -41,7 +38,5 @@ public class App extends Application {
     public static AppComponent getAppComponent ( ) {
         return appComponent;
     }
-
-
 
 }

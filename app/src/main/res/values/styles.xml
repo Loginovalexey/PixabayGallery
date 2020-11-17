@@ -16,15 +16,5 @@
         <item name="boxBackgroundColor">@color/colorPrimaryLight</item>
 
     </style>
-<!--    <style name="editTextStyle" parent="Widget.AppCompat.EditText">-->
-<!--        <item name="background">@color/colorPrimaryLight</item>-->
-<!--    </style>-->
-
-    <style name="AppShapeAppearance.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
-        <item name="elevation">4dp</item>
-    </style>
-
 
 </resources>

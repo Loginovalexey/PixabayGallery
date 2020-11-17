@@ -1,90 +1,97 @@
 package ru.alapplications.myphoto.ui.gallery.viewmodel;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.paging.PositionalDataSource;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import ru.alapplications.myphoto.app.App;
 import ru.alapplications.myphoto.model.Model;
 import ru.alapplications.myphoto.model.entities.Hit;
-import ru.alapplications.myphoto.ui.gallery.viewmodel.LoadingState;
 
 public class HitsDataSource extends PositionalDataSource<Hit> {
 
-    private IOnLoadResult onLoadResult;
+    private final IOnLoadResult onLoadResult;
 
     @Inject
-    ServerHelper serverHelper;
+    ServerHandler serverHandler;
 
+    @Inject
+    CacheHandler cacheHandler;
 
     @Inject
     Model model;
 
     public HitsDataSource ( IOnLoadResult onLoadResult ) {
-
         App.getAppComponent ( ).inject ( this );
         this.onLoadResult = onLoadResult;
     }
 
-
+    //Загрузка первой страницы
     @Override
-    public void loadInitial ( @NonNull LoadInitialParams params , @NonNull LoadInitialCallback<Hit> callback ) {
-        if ( model.getHits ( ) != null ) {
-            callback.onResult ( model.getHits ( ).subList ( 0 , model.getLoadedCount ( ) ) , 0 , model.getHits ( ).size ( ) );
-            Log.d ( App.TAG , "init from model" );
-        } else if ( !CacheHelper.isCacheBeenLoaded ( ) )
-            CacheHelper.loadCache ( ( isExist , hits , totalHits ) -> {
-                if ( isExist ) {
-                    CacheHelper.setCacheBeenLoaded ( true );
-                    Log.d ( App.TAG , "init from cache" );
-                    CacheHelper.setNeedSaveCache ( false );
-                    CacheHelper.prevLastIndex = hits.size ( );
-                    callback.onResult ( hits , 0 , totalHits );
-                    onLoadResult.callOnLoadResult ( LoadingState.OK);
-                } else
-                    serverHelper.request ( 0 , params.pageSize , serverResponse -> {
-                                if ( serverResponse == null )
-                                    onLoadResult.callOnLoadResult ( LoadingState.FIRST_LOAD_ERROR );
-                                else if ( serverResponse.getHits ( ).isEmpty () )
-                                    onLoadResult.callOnLoadResult ( LoadingState.NO_MORE_DATA );
-                                else {
-                                    Log.d ( App.TAG , "init from server" );
-                                    CacheHelper.setNeedSaveCache ( true );
-                                    onLoadResult.callOnLoadResult ( LoadingState.OK );
-                                    callback.onResult ( serverResponse.getHits ( ) , 0 , serverResponse.getTotalHits ( ) );
-
-                                }
-                            }
-                    );
-            } );
+    public void loadInitial ( @NonNull LoadInitialParams params ,
+                              @NonNull LoadInitialCallback<Hit> callback ) {
+        //Первый источник данных для начальной загрузки - модель.
+        if ( model.getLoadedHits ( ) != null ) initFromModel ( callback );
         else
-            serverHelper.request ( 0 , params.pageSize , serverResponse -> {
-                        if ( serverResponse == null ) onLoadResult.callOnLoadResult ( LoadingState.FIRST_LOAD_ERROR );
-                        else if ( serverResponse.getHits ( ).isEmpty ())
-                            onLoadResult.callOnLoadResult ( LoadingState.NO_MORE_DATA );
-                        else {
-                            Log.d ( App.TAG , "init from server" );
-                            CacheHelper.setNeedSaveCache ( true );
-                            onLoadResult.callOnLoadResult ( LoadingState.OK );
-                            callback.onResult ( serverResponse.getHits ( ) , 0 , serverResponse.getTotalHits ( ) );
-                        }
-                    }
-            );
+            //Второй источник данных - кэш
+            cacheHandler.loadCache ( ( cacheIsExist , hits , totalHits ) -> {
+                if ( cacheIsExist )
+                    initFromCache ( callback , hits , totalHits );
+                else
+                    //В последнюю очередь данные загружаются с веб-сервера
+                    initFromServer ( params , callback );
+            } );
     }
 
+    private void initFromServer ( @NonNull LoadInitialParams params ,
+                                  @NonNull LoadInitialCallback<Hit> callback ) {
+        //Запрос к серверу и проверка результата
+        serverHandler.request ( 0 , params.pageSize , serverResponse -> {
+                    if ( serverResponse == null )
+                        onLoadResult.callOnLoadResult ( LoadingState.FIRST_LOAD_ERROR );
+                    else if ( serverResponse.getHits ( ).isEmpty ( ) )
+                        onLoadResult.callOnLoadResult ( LoadingState.EMPTY_DATA );
+                    else {
+                        //Новые данные получены, значит потребуется обновить кэш
+                        model.setNeedSaveCache ( true );
+                        onLoadResult.callOnLoadResult ( LoadingState.OK );
+                        callback.onResult ( serverResponse.getHits ( ) , 0 ,
+                                serverResponse.getTotalHits ( ) );
+                    }
+                }
+        );
+    }
+
+    private void initFromCache ( @NonNull LoadInitialCallback<Hit> callback ,
+                                 List<Hit> hits ,
+                                 Integer totalHits ) {
+        model.setNeedSaveCache ( false );
+        callback.onResult ( hits , 0 , totalHits );
+        onLoadResult.callOnLoadResult ( LoadingState.OK );
+    }
+
+    private void initFromModel ( @NonNull LoadInitialCallback<Hit> callback ) {
+        callback.onResult ( model.getLoadedHits (),
+                0 , model.getHitsSize ( ) );
+        model.setNeedSaveCache ( false );
+    }
+
+    //Загрузка новой страницы
     @Override
     public void loadRange ( @NonNull LoadRangeParams
                                     params , @NonNull LoadRangeCallback<Hit> callback ) {
-        serverHelper.request ( params.startPosition , params.loadSize , serverResponse -> {
+        serverHandler.request ( params.startPosition , params.loadSize , serverResponse -> {
+            //Анализ ответа от сервера
             if ( serverResponse != null ) {
-                CacheHelper.setNeedSaveCache ( true );
+                //Получены новые данные, которые нужно будет закэшировать
+                model.setNeedSaveCache ( true );
                 callback.onResult ( serverResponse.getHits ( ) );
                 onLoadResult.callOnLoadResult ( LoadingState.OK );
             } else {
-                onLoadResult.callOnLoadResult ( LoadingState.ERROR );
+                onLoadResult.callOnLoadResult ( LoadingState.LOAD_ERROR );
             }
         } );
     }

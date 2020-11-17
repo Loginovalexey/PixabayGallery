@@ -1,7 +1,6 @@
 package ru.alapplications.myphoto.ui.wallpaper;
 
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -9,6 +8,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,85 +21,135 @@ import java.io.IOException;
 import ru.alapplications.myphoto.R;
 import ru.alapplications.myphoto.ui.OnMessage;
 
-import static ru.alapplications.myphoto.ui.detail.view.DetailFragment.FILE_FOR_WALL_PAPER;
+import static ru.alapplications.myphoto.ui.detail.viewmodel.FileHandler.FILE_FOR_WALL_PAPER;
 
+
+/**
+ * Класс для действий по установке обоев
+ */
 
 public class WallPaperFragment extends Fragment {
 
     CropImageView cropImageView;
-    private OnMessage onMessage;
-    private boolean   ratio;
+    FrameLayout   cropFrame;
+    //Флаг установки пропорций обрезки
+    private boolean isSetScreenRatio = false;
+    private boolean isRotated        = false;
 
     public static WallPaperFragment newInstance ( ) {
-        WallPaperFragment fragment = new WallPaperFragment ( );
-        return fragment;
-    }
-
-    @Override
-    public void onCreate ( Bundle savedInstanceState ) {
-        super.onCreate ( savedInstanceState );
-        ratio = true;
+        return new WallPaperFragment ( );
     }
 
     @Override
     public View onCreateView ( LayoutInflater inflater , ViewGroup container ,
                                Bundle savedInstanceState ) {
-
         return inflater.inflate ( R.layout.fragment_wall_paper , container , false );
-    }
-
-    @Override
-    public void onAttach ( @NonNull Context context ) {
-        super.onAttach ( context );
-        onMessage = ( OnMessage ) context;
-
     }
 
     @Override
     public void onViewCreated ( @NonNull View view , @Nullable Bundle savedInstanceState ) {
         super.onViewCreated ( view , savedInstanceState );
-        cropImageView = getActivity ( ).findViewById ( R.id.cropImageView );
-        Uri uri = Uri.parse ( "file://" + getActivity ( ).getExternalCacheDir ( ) + "/" + FILE_FOR_WALL_PAPER );
-        cropImageView.setImageUriAsync ( uri );
-        cropImageView.setOnCropImageCompleteListener ( ( view1 , result )
-                -> cropImageView.setImageBitmap ( result.getBitmap ( ) ) );
-
-
-        view.findViewById ( R.id.toCropImageView ).setOnClickListener ( view12 -> cropImageView.getCroppedImageAsync ( ) );
-
-        view.findViewById ( R.id.rotateImageView ).setOnClickListener ( view13 -> cropImageView.rotateImage ( 90 ) );
-
-        view.findViewById ( R.id.setWallPaperImageView ).setOnClickListener ( view13 -> {
-            setWallPaper ( );
-        } );
-
-        view.findViewById ( R.id.ratioImageView ).setOnClickListener ( view1 -> {
-            ratio = !ratio;
-            setRatio ( );
-        } );
-
-
+        initCropImage ( );
+        initRotateTool ( view );
+        initRatioTool ( view );
+        initCropTool ( view );
+        initWallPaperTool ( view );
+        startMessage ( );
     }
 
+    private void startMessage ( ) {
+        (( OnMessage ) getActivity ( )).showMessage (
+                getString ( R.string.settingWallpaper ) ,
+                getString ( R.string.cropImage ) ,
+                null );
+    }
+
+    private void initCropImage ( ) {
+        cropFrame = getActivity ( ).findViewById ( R.id.cropFrame );
+        cropImageView = getActivity ( ).findViewById ( R.id.cropImageView );
+        //Загрузка изображения из сохраненного файла
+        Uri uri = Uri.parse ( "file://" + getActivity ( ).getExternalCacheDir ( ) + "/" +
+                FILE_FOR_WALL_PAPER );
+        cropImageView.setImageUriAsync ( uri );
+        cropImageView.setOnSetImageUriCompleteListener ( ( view , uri1 , error ) -> {
+            //Определение границ изображения для корректного отображения фона
+            cropImageView.setBackground (
+                    getResources ( )
+                            .getDrawable ( R.drawable.pyramidbitmap ) );
+            cropImageView.setLayoutParams (
+                    LayoutParamsSetter.setPlacementLayoutParameters (
+                            cropFrame , cropImageView , false ) );
+
+        } );
+//        //При обрезке установить обновленное(обрезанное) изображение
+        cropImageView.setOnCropImageCompleteListener ( ( view1 , result ) -> {
+                    isRotated = false;
+                    cropImageView.setImageBitmap ( result.getBitmap ( ) );
+                    cropImageView.setLayoutParams (
+                            LayoutParamsSetter.setPlacementLayoutParameters (
+                                    cropFrame , cropImageView , false ));
+                }
+        );
+        //Установка пропорций обрезки
+        setRatio ( );
+    }
+
+
+    //Установка действий при нажатии на кнопку вращения
+    private void initRotateTool ( @NonNull View view ) {
+        view.findViewById ( R.id.rotate ).setOnClickListener ( viewRotate -> {
+            cropImageView.rotateImage ( 90 );
+            isRotated = !isRotated;
+            cropImageView.setLayoutParams (
+                    LayoutParamsSetter.setPlacementLayoutParameters (
+                            cropFrame , cropImageView , isRotated ) );
+        } );
+    }
+
+    //Установка действий при нажатии на кнопку пропорций
+    private void initRatioTool ( @NonNull View view ) {
+        view.findViewById ( R.id.setRatio ).setOnClickListener ( viewRatio -> {
+            isSetScreenRatio = !isSetScreenRatio;
+            setRatio ( );
+        } );
+    }
+
+    //Установка действий при нажатии на кнопку обрезки
+    private void initCropTool ( @NonNull View view ) {
+        view.findViewById ( R.id.сrop ).setOnClickListener ( viewCrop ->
+                cropImageView.getCroppedImageAsync ( ) );
+    }
+
+    //Установка действий при нажатии на кнопку установки обоев
+    private void initWallPaperTool ( @NonNull View view ) {
+        view.findViewById ( R.id.setWallPaper ).setOnClickListener ( viewWall -> setWallPaper ( ) );
+    }
+
+
     private void setRatio ( ) {
-        if ( ratio ) {
+        if ( isSetScreenRatio ) {
+            //Установка пропорций в соответствии с размерами экрана
             Display display = getActivity ( ).getWindowManager ( ).getDefaultDisplay ( );
             DisplayMetrics metrics = new DisplayMetrics ( );
             display.getMetrics ( metrics );
             cropImageView.setAspectRatio ( metrics.widthPixels , metrics.heightPixels );
-        } else {
+        } else
             cropImageView.clearAspectRatio ( );
+    }
+
+    //Установка обоев
+    public void setWallPaper ( ) {
+        WallpaperManager wallpaperManager = WallpaperManager
+                .getInstance ( getActivity ( ).getApplicationContext ( ) );
+        try {
+            wallpaperManager.setBitmap ( cropImageView.getCroppedImage ( ) );
+            (( OnMessage ) getActivity ( )).showMessage (
+                    "" , getActivity ( ).getResources ( ).getString ( R.string.wallpaperSet ) , null );
+        } catch (IOException e) {
+            (( OnMessage ) getActivity ( )).showMessage (
+                    "" , getActivity ( ).getResources ( ).getString ( R.string.wallpaperNotSet ) , null );
         }
     }
 
-    public void setWallPaper ( ) {
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance ( getActivity ( ).getApplicationContext ( ) );
-        try {
-            wallpaperManager.setBitmap ( cropImageView.getCroppedImage ( ) );
-            onMessage.showMessage ( "" , getActivity ( ).getResources ( ).getString ( R.string.wallpaperSet ) , null );
-        } catch (IOException e) {
-            onMessage.showMessage ( "" , getActivity ( ).getResources ( ).getString ( R.string.wallpaperNotSet ) , null );
-        }
-    }
 
 }

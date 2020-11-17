@@ -1,17 +1,12 @@
 package ru.alapplications.myphoto.ui.gallery.viewmodel;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
-
-import com.google.gson.Gson;
 
 import java.util.concurrent.Executors;
 
@@ -21,18 +16,37 @@ import ru.alapplications.myphoto.app.App;
 import ru.alapplications.myphoto.model.Model;
 import ru.alapplications.myphoto.model.entities.Hit;
 import ru.alapplications.myphoto.model.entities.SearchOptions;
-import ru.alapplications.myphoto.ui.search.viewmodel.SearchViewModel;
+import ru.alapplications.myphoto.ui.search.viewmodel.SharedPreferencesHandler;
 
 
+/**
+ * ViewModel для экрана с галереей
+ */
 public class GalleryViewModel extends ViewModel {
 
-    public  LiveData<PagedList<Hit>>      pagedListLiveData;
-    private MutableLiveData<Integer>      currentIndex;
-    public  IOnLoadResult                 onLoadResult;
-    public  MutableLiveData<LoadingState> loadingState;
-    public  MutableLiveData<String>       message;
-    public  MutableLiveData<String>       searchQuery;
-    public  MutableLiveData<Boolean>      isNewDataSet;
+    //Размер подгружаемых страниц
+    private static final int PAGE_SIZE = 20;
+
+    /**
+     * Список загруженных миниатюр с поддержкой пагинации
+     */
+    public LiveData<PagedList<Hit>>      pagedList;
+    /**
+     * Колбэк для отслеживания статуса загрузки
+     */
+    public IOnLoadResult                 onLoadResult;
+    /**
+     * Передатчик статуса загрузок
+     */
+    public MutableLiveData<LoadingState> loadingState;
+    /**
+     * Передатчик для строки поиска
+     */
+    public MutableLiveData<String>       searchQuery;
+    /**
+     * Передатчик, сигнализирующий о новых данных
+     */
+    public MutableLiveData<Boolean>      isNewDataSet;
 
     @Inject
     App app;
@@ -40,58 +54,32 @@ public class GalleryViewModel extends ViewModel {
     @Inject
     Model model;
 
+    @Inject
+    CacheHandler cacheHandler;
+
+    @Inject
+    SharedPreferencesHandler sharedPreferencesHandler;
+
 
     @SuppressLint("CheckResult")
     public GalleryViewModel ( ) {
         App.getAppComponent ( ).inject ( this );
+        initSearchOptionsIfNotExist ( );
+        createLiveDataObjects ( );
+        createLoadingStateCallBack ( );
+        createPagedList ( );
+    }
+
+    //Функция запускается в самом начале работы приложения для определения параметров поиска
+    private void initSearchOptionsIfNotExist ( ) {
         if ( model.getSearchOptions ( ) == null ) initSearchOptions ( );
-        Log.d ( App.TAG , "ViewModel created" );
-        currentIndex = new MutableLiveData<> ( 0 );
-        message = new MutableLiveData<> ( );
-        loadingState = new MutableLiveData<> ( );
-        isNewDataSet = new MutableLiveData<> ( );
-        searchQuery = new MutableLiveData<> ( );
-        onLoadResult = new IOnLoadResult ( ) {
-            @Override
-            public void callOnLoadResult ( LoadingState result ) {
-                loadingState.postValue ( result );
-                Log.d ( App.TAG , "GalleryViewModel:" + result.toString ( ) );
-            }
-        };
-        initDataSource ( );
-    }
-
-    private void initDataSource ( ) {
-        HitsDataSourceFactory sourceFactory = new HitsDataSourceFactory ( onLoadResult );
-        PagedList.Config config = new PagedList.Config.Builder ( )
-                .setPageSize ( 20 )
-                .setEnablePlaceholders ( true )
-                .build ( );
-        pagedListLiveData = new LivePagedListBuilder<> ( sourceFactory , config )
-                .setFetchExecutor ( Executors.newSingleThreadExecutor ( ) )
-                .build ( );
-    }
-
-
-    public void onViewCreated ( ) {
-        if ( model.isNeedReload ( ) ) {
-            model.reset ( );
-            CacheHelper.setNeedSaveCache ( false );
-            CacheHelper.clearCache ( );
-            initDataSource ( );
-            isNewDataSet.setValue ( true );
-            loadingState.setValue ( LoadingState.OK );
-        }
-        searchQuery.setValue ( model.getSearchOptions ( ).getQuery ( ) );
-
-
     }
 
     private void initSearchOptions ( ) {
         try {
-            SharedPreferences sharedPreferences = app.getSharedPreferences ( SearchViewModel.SEARCH_OPTIONS_SHARED_PREFERENCES_FILE_NAME , Context.MODE_PRIVATE );
-            String json = sharedPreferences.getString ( SearchViewModel.SEARCH_OPTIONS_KEY , null );
-            model.setSearchOptions ( new Gson ( ).fromJson ( json , SearchOptions.class ) );
+            //Попытка чтения записанных в SharedPreferences  параметров поиска
+            model.setSearchOptions (sharedPreferencesHandler.loadSearchOptionsFromPref ());
+            //При неудаче чтения - сброс настроек поиска
             if ( model.getSearchOptions ( ) == null )
                 model.setSearchOptions ( new SearchOptions ( ) );
         } catch (Exception e) {
@@ -99,39 +87,105 @@ public class GalleryViewModel extends ViewModel {
         }
     }
 
-    public void saveData ( ) {
-        //adapter.onDestroy ( );
-        if ( !pagedListLiveData.getValue ( ).isEmpty ( ) ) {
-            model.setHits ( pagedListLiveData.getValue ( ) );
-            model.setLoadedCount ( pagedListLiveData.getValue ( ).getLoadedCount ( ) );
-            if ( CacheHelper.isNeedSaveCache ( ) &&
-                    !model.getHits ( ).isEmpty ( ) &&
-                    (!CacheHelper.prevLastIndex.equals ( model.getLoadedCount ( ) )) ) {
-                CacheHelper.saveCache ( model.getHits ( ).subList (
-                        CacheHelper.prevLastIndex , model.getLoadedCount ( ) ) ,
-                        model.getHits ( ).size ( ) );
-                CacheHelper.prevLastIndex = pagedListLiveData.getValue ( ).getLoadedCount ( );
-            }
+    private void createLiveDataObjects ( ) {
+        loadingState = new MutableLiveData<> ( );
+        isNewDataSet = new MutableLiveData<> ( );
+        searchQuery = new MutableLiveData<> ( );
+    }
+
+    private void createLoadingStateCallBack ( ) {
+        onLoadResult = result -> loadingState.postValue ( result );
+    }
+
+    //Создание списка данных с поддержкой пагинации
+    private void createPagedList ( ) {
+        //В фабрику для источника данных передается колбэк для получения статусов загрузки
+        HitsDataSourceFactory sourceFactory = new HitsDataSourceFactory ( onLoadResult );
+        PagedList.Config config = new PagedList.Config.Builder ( )
+                .setPageSize ( PAGE_SIZE )
+                .setEnablePlaceholders ( true )
+                .build ( );
+        pagedList = new LivePagedListBuilder<> ( sourceFactory , config )
+                .setFetchExecutor ( Executors.newSingleThreadExecutor ( ) )
+                .build ( );
+    }
+
+    public void onViewCreated ( ) {
+        //Галерея может быть выведена на экран после задания новых параметров поиска,
+        //тогда необходимо сбросить все старые данные
+        resetAllIfNecessary ( );
+        //Передача поискового запроса
+        searchQuery.setValue (
+                model.getSearchOptions ( ).getQuery ( ) );
+    }
+
+    private void resetAllIfNecessary ( ) {
+
+        if ( model.isNeedReload ( ) ) {
+            //Сброс всех данных в модели
+            model.reset ( );
+            //Очистка кэша
+            cacheHandler.clearCache ( );
+            //Создание списка для новых данных
+            createPagedList ( );
+            //Сигнализирование о новом наборе данных
+            isNewDataSet.setValue ( true );
+            //Сигнализирование об ожидании данных
+            loadingState.setValue ( LoadingState.WAITING );
         }
-
     }
 
-    public void reload ( ) {
-        saveData ( );
-//        initDataSource ();
-        pagedListLiveData.getValue ( ).getDataSource ( ).invalidate ( );
-    }
 
-    public LiveData<Integer> getCurrentIndex ( ) {
-        return currentIndex;
-    }
-
-    public void setCurrentIndex ( int position ) {
-        currentIndex.setValue ( position );
-    }
-
+    /**
+     * Перезагрузка первой страницы
+     */
     public void firstReload ( ) {
         loadingState.setValue ( LoadingState.WAITING );
-        initDataSource ( );
+        //Создать новый лист с пагинацией, поскольку старый - пустой и не может быть прокручен
+        createPagedList ( );
+    }
+
+    /**
+     * Перезагрузка очередной страницы
+     */
+    public void reload ( ) {
+        //Сохранение уже имеющихся данных
+        saveData ( );
+        //Возобновление отслеживания скроллинга
+        pagedList.getValue ( ).getDataSource ( ).invalidate ( );
+    }
+
+
+    /**
+     * Сохранение данных в модель и кэширование последних неучтенных записей
+     */
+    public void saveData ( ) {
+        if ( !pagedList.getValue ( ).isEmpty ( ) ) {
+            copyDataToModel ( );
+        }
+    }
+
+    private void copyDataToModel ( ) {
+        model.setHits ( pagedList.getValue ( ), pagedList.getValue ( ).getLoadedCount ( ) );
+    }
+
+    //Сохранение в модель индекса выбранной в галерее картинки
+    public void setCurrentIndex ( int position ) {
+        copyDataToModel ();
+        model.setCurrentIndex ( position );
+    }
+
+
+    //Кэширование загруженных данных при удалении активити
+    @Override
+    protected void onCleared ( ) {
+        super.onCleared ( );
+        copyDataToModel ();
+        if (model.isNeedSaveCache ( )) saveCache ( );
+    }
+
+    private void saveCache ( ) {
+        cacheHandler.saveCache ( model.getLoadedHits () ,
+                model.getHitsSize() );
     }
 }

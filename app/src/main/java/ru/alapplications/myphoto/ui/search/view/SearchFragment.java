@@ -1,5 +1,6 @@
 package ru.alapplications.myphoto.ui.search.view;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,51 +31,68 @@ import ru.alapplications.myphoto.model.entities.SearchOptions;
 import ru.alapplications.myphoto.ui.search.viewmodel.SearchViewModel;
 
 
+/**
+ * Фрагмент для работы с параметрами поиска
+ */
 public class SearchFragment extends Fragment {
 
     private SearchViewModel viewModel;
 
     private Unbinder unbinder;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.searchEditText)
     EditText searchEditText;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.imageTypeСheckBox)
     CheckBox imageTypeCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.imageTypeSpinner)
     Spinner imageTypeSpinner;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.orientationCheckBox)
     CheckBox orientationCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.orientationRadioGroup)
     RadioGroup orientationRadioGroup;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.categoryCheckBox)
     CheckBox categoryCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.categorySpinner)
     Spinner categorySpinner;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.colorsCheckBox)
     CheckBox colorsCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.colorsChipGroup)
     ChipGroup colorsChipGroup;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.editorsChoiceCheckBox)
     CheckBox editorsChoiceCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.safeSearchCheckBox)
     CheckBox safeSearchCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.orderСheckBox)
     CheckBox orderCheckBox;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.orderRadioGroup)
     RadioGroup orderRadioGroup;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.searchButton)
     Button searchButton;
 
@@ -84,77 +102,31 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onCreate ( Bundle savedInstanceState ) {
-        super.onCreate ( savedInstanceState );
-        viewModel = ViewModelProviders.of ( getActivity ( ) ).get ( SearchViewModel.class );
-    }
-
-    @Override
     public View onCreateView ( LayoutInflater inflater , ViewGroup container ,
                                Bundle savedInstanceState ) {
-        View view = inflater.inflate ( R.layout.fragment_search_options , container , false );
-        unbinder = ButterKnife.bind ( this , view );
-        return view;
+        return inflater.inflate ( R.layout.fragment_search_options , container , false );
     }
 
 
     @Override
     public void onViewCreated ( @NonNull View view , @Nullable Bundle savedInstanceState ) {
         super.onViewCreated ( view , savedInstanceState );
-        ButterKnife.bind ( getActivity ( ) );
 
-        searchEditText.setOnEditorActionListener ( ( textView , i , keyEvent ) -> {
-            if ( i == EditorInfo.IME_ACTION_SEARCH ) {
-                startSearch ( );
-                return true;
-            }
-            return false;
-        } );
-
-        imageTypeCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) -> {
-            setGroupVisibility ( isChecked , imageTypeSpinner );
-        } );
-
-
-        for (int i = 0; i < getResources ( ).getStringArray ( R.array.orientationText ).length; i++) {
-            RadioButton radioButton = new RadioButton ( getContext ( ) );
-            radioButton.setText ( getResources ( ).getStringArray ( R.array.orientationText )[i] );
-            orientationRadioGroup.addView ( radioButton );
-        }
-
-        orientationCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
-                setGroupVisibility ( isChecked , orientationRadioGroup ) );
-
-        categoryCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
-                setGroupVisibility ( isChecked , categorySpinner ) );
-
-        for (int i = 0; i < getResources ( ).getStringArray ( R.array.colorText ).length; i++) {
-            Chip chip = new Chip ( getContext ( ) );
-            chip.setText ( getResources ( ).getStringArray ( R.array.colorText )[i] );
-            String backGroundColor =
-                    getResources ( ).getStringArray ( R.array.colorRgb )[i];
-            chip.setChipBackgroundColor ( ColorStateList.valueOf ( Color.parseColor ( backGroundColor ) ) );
-            if ( backGroundColor.equals ( "#000000" ) )
-                chip.setTextColor ( Color.parseColor ( "#FFFFFF" ) );
-            chip.setCheckable ( true );
-            colorsChipGroup.addView ( chip );
-        }
-
-        colorsCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) -> {
-            setGroupVisibility ( isChecked , colorsChipGroup );
-        } );
-
-        for (int i = 0; i < getResources ( ).getStringArray ( R.array.order ).length; i++) {
-            RadioButton radioButton = new RadioButton ( getContext ( ) );
-            radioButton.setText ( getResources ( ).getStringArray ( R.array.orderText )[i] );
-            orderRadioGroup.addView ( radioButton );
-        }
-
-        orderCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
-                setGroupVisibility ( isChecked , orderRadioGroup ) );
-
+        //Инициализация визуальных компонентов
+        initButterKnife ( view );
+        initSearchEditText ( );
+        initImageCheckBox ( );
+        initOrientationGroup ( );
+        initCategoryCheckBox ( );
+        initColorsGroup ( );
+        initOrderGroup ( );
         searchButton.setOnClickListener ( view1 -> startSearch ( ) );
 
+        initViewModel ( );
+        observe ( );
+    }
+
+    private void observe ( ) {
         viewModel.searchOptionsState.observe ( getViewLifecycleOwner ( ) , searchOptions -> {
             initQuery ( searchOptions.getQuery ( ) );
             initImageTypeIndex ( searchOptions.getImageTypeIndex ( ) );
@@ -172,7 +144,9 @@ public class SearchFragment extends Fragment {
         } );
     }
 
+    //Действия при нажатии на кнопку "Поиск"
     private void startSearch ( ) {
+        //Создание параметров поиска согласно выбранным элементам
         SearchOptions searchOptions = new SearchOptions (
                 getQuery ( ) ,
                 getImageTypeChoice ( ) ,
@@ -185,10 +159,84 @@ public class SearchFragment extends Fragment {
                 getColorsChecks ( ) ,
                 getEditorChoice ( ) ,
                 getSafeSearchChoice ( ) ,
-                getOrderChoice ( ),
+                getOrderChoice ( ) ,
                 getOrderIndex ( ) );
+        //Передача новых параметров во ViewModel
         viewModel.actionSearch ( searchOptions );
+        //Возвращение на предыдущий экран
         back ( );
+    }
+
+    private void initOrderGroup ( ) {
+        for (int i = 0; i < getResources ( ).getStringArray ( R.array.order ).length; i++) {
+            RadioButton radioButton = new RadioButton ( getContext ( ) );
+            radioButton.setText ( getResources ( ).getStringArray ( R.array.orderText )[i] );
+            orderRadioGroup.addView ( radioButton );
+        }
+
+        orderCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
+                setGroupVisibility ( isChecked , orderRadioGroup ) );
+    }
+
+    private void initColorsGroup ( ) {
+        initColorsChips ( );
+
+        colorsCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) -> setGroupVisibility ( isChecked , colorsChipGroup ) );
+    }
+
+    private void initColorsChips ( ) {
+        for (int i = 0; i < getResources ( ).getStringArray ( R.array.colorText ).length; i++) {
+            Chip chip = new Chip ( getContext ( ) );
+            chip.setText ( getResources ( ).getStringArray ( R.array.colorText )[i] );
+            String backGroundColor =
+                    getResources ( ).getStringArray ( R.array.colorRgb )[i];
+            chip.setChipBackgroundColor ( ColorStateList.valueOf ( Color.parseColor ( backGroundColor ) ) );
+            if ( backGroundColor.equals ( "#000000" ) )
+                chip.setTextColor ( Color.parseColor ( "#FFFFFF" ) );
+            chip.setCheckable ( true );
+            colorsChipGroup.addView ( chip );
+        }
+    }
+
+    private void initCategoryCheckBox ( ) {
+        categoryCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
+                setGroupVisibility ( isChecked , categorySpinner ) );
+    }
+
+    private void initOrientationGroup ( ) {
+        for (int i = 0; i < getResources ( ).getStringArray ( R.array.orientationText ).length; i++) {
+            RadioButton radioButton = new RadioButton ( getContext ( ) );
+            radioButton.setText ( getResources ( ).getStringArray ( R.array.orientationText )[i] );
+            orientationRadioGroup.addView ( radioButton );
+        }
+
+        orientationCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
+                setGroupVisibility ( isChecked , orientationRadioGroup ) );
+    }
+
+    private void initImageCheckBox ( ) {
+        imageTypeCheckBox.setOnCheckedChangeListener ( ( compoundButton , isChecked ) ->
+                setGroupVisibility ( isChecked , imageTypeSpinner ) );
+    }
+
+    private void initSearchEditText ( ) {
+        searchEditText.setOnEditorActionListener ( ( textView , action , keyEvent ) -> {
+            if ( action == EditorInfo.IME_ACTION_SEARCH ) {
+                startSearch ( );
+                return true;
+            }
+            return false;
+        } );
+    }
+
+    private void initButterKnife ( @NonNull View view ) {
+        unbinder = ButterKnife.bind ( this , view );
+        ButterKnife.bind ( getActivity ( ) );
+    }
+
+    private void initViewModel ( ) {
+        viewModel = ViewModelProviders.of ( getActivity ( ) ).get ( SearchViewModel.class );
+        viewModel.onViewCreated ( );
     }
 
     public void initQuery ( String query ) {
@@ -199,11 +247,9 @@ public class SearchFragment extends Fragment {
         imageTypeSpinner.setSelection ( imageTypeIndex );
     }
 
-
     public void initImageTypeChoice ( boolean imageTypeChoice ) {
         imageTypeCheckBox.setChecked ( imageTypeChoice );
         setGroupVisibility ( imageTypeChoice , imageTypeSpinner );
-
     }
 
     public void initOrientationIndex ( Integer orientationIndex ) {
@@ -225,11 +271,10 @@ public class SearchFragment extends Fragment {
     }
 
     private void setGroupVisibility ( Boolean isChecked , View viewGroup ) {
-        if ( isChecked ) {
+        if ( isChecked )
             viewGroup.setVisibility ( View.VISIBLE );
-        } else {
+        else
             viewGroup.setVisibility ( View.GONE );
-        }
     }
 
 

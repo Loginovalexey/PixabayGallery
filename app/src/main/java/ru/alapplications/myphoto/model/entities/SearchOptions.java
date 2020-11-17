@@ -1,6 +1,11 @@
 package ru.alapplications.myphoto.model.entities;
 
+
+/**
+ * Класс для хранения данных о параметрах поиска
+ */
 public class SearchOptions {
+
     private String    query;
     private boolean   imageTypeChoice;
     private int       imageTypeIndex;
@@ -15,6 +20,21 @@ public class SearchOptions {
     private boolean   orderChoice;
     private int       orderIndex;
 
+    /**
+     * @param query - предмет поиска
+     * @param imageTypeChoice - флаг учета типа изображения
+     * @param imageTypeIndex - выбор типа изображения
+     * @param orientationChoice - флаг учета ориентации изображения
+     * @param orientationIndex - выбор ориентации
+     * @param categoryChoice - флаг учета категории изображения
+     * @param categoryIndex - выбор категории
+     * @param colorsChoice - флаг учета цветов
+     * @param colorsChecks - выбранные цвета
+     * @param editorChoice - флаг учета выбора редакции
+     * @param safeSearchChoice - флаг учета ограничений по возрасту
+     * @param orderChoice  - флаг учета сортировки
+     * @param orderIndex - сортировка
+     */
     public SearchOptions ( String query ,
                            boolean imageTypeChoice ,
                            int imageTypeIndex ,
@@ -74,7 +94,7 @@ public class SearchOptions {
     }
 
     public SearchOptions ( ) {
-        setOptions ( "Поиск" ,
+        setOptions ( "" ,
                 false ,
                 0 ,
                 false ,
@@ -93,104 +113,52 @@ public class SearchOptions {
         return query;
     }
 
-    public void setQuery ( String query ) {
-        this.query = query;
-    }
-
     public boolean getImageTypeChoice ( ) {
         return imageTypeChoice;
-    }
-
-    public void setImageTypeChoice ( boolean imageTypeChoice ) {
-        this.imageTypeChoice = imageTypeChoice;
     }
 
     public int getImageTypeIndex ( ) {
         return imageTypeIndex;
     }
 
-    public void setImageTypeIndex ( int imageTypeIndex ) {
-        this.imageTypeIndex = imageTypeIndex;
-    }
-
     public boolean getOrientationChoice ( ) {
         return orientationChoice;
-    }
-
-    public void setOrientationChoice ( boolean orientationChoice ) {
-        this.orientationChoice = orientationChoice;
     }
 
     public int getOrientationIndex ( ) {
         return orientationIndex;
     }
 
-    public void setOrientationIndex ( int orientationIndex ) {
-        this.orientationIndex = orientationIndex;
-    }
-
     public boolean getCategoryChoice ( ) {
         return categoryChoice;
-    }
-
-    public void setCategoryChoice ( boolean categoryChoice ) {
-        this.categoryChoice = categoryChoice;
     }
 
     public int getCategoryIndex ( ) {
         return categoryIndex;
     }
 
-    public void setCategoryIndex ( int categoryIndex ) {
-        this.categoryIndex = categoryIndex;
-    }
-
     public boolean getColorsChoice ( ) {
         return colorsChoice;
-    }
-
-    public void setColorsChoice ( boolean colorsChoice ) {
-        this.colorsChoice = colorsChoice;
     }
 
     public boolean[] getColorsChecks ( ) {
         return colorsChecks;
     }
 
-    public void setColorsChecks ( boolean[] colorsChecks ) {
-        this.colorsChecks = colorsChecks;
-    }
-
     public boolean getEditorChoice ( ) {
         return editorChoice;
-    }
-
-    public void setEditorChoice ( boolean editorChoice ) {
-        this.editorChoice = editorChoice;
     }
 
     public boolean getSafeSearchChoice ( ) {
         return safeSearchChoice;
     }
 
-    public void setSafeSearchChoice ( boolean safeSearchChoice ) {
-        this.safeSearchChoice = safeSearchChoice;
-    }
-
     public boolean getOrderChoice ( ) {
         return orderChoice;
     }
 
-    public void setOrderChoice ( boolean orderChoice ) {
-        this.orderChoice = orderChoice;
-    }
-
     public int getOrderIndex ( ) {
         return orderIndex;
-    }
-
-    public void setOrderIndex ( int orderIndex ) {
-        this.orderIndex = orderIndex;
     }
 
 }
