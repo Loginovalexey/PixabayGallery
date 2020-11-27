@@ -1,7 +1,7 @@
 <resources>
 
 <!--    Application-->
-    <string name="appName" translatable="false">Pixabay Finder</string>
+    <string name="appName" translatable="false">Picture Finder</string>
 
 <!--    Gallery screen-->
     <string name="search">Search</string>

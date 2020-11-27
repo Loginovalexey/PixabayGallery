@@ -8,11 +8,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ru.alapplications.myphoto.ui.detail.view.ZoomablelePager
+    <ru.loginovalexeydevelopment.picturefinder.ui.detail.view.ZoomablelePager
         android:id="@+id/detailViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </ru.alapplications.myphoto.ui.detail.view.ZoomablelePager>
+    </ru.loginovalexeydevelopment.picturefinder.ui.detail.view.ZoomablelePager>
 
     <LinearLayout
         android:id="@+id/detailDownLayout"

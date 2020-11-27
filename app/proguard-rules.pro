@@ -7,6 +7,6 @@
 -keepattributes *Annotation*
 
 # Application classes that will be serialized/deserialized over Gson
--keep class ru.alapplications.myphoto.model.entities.* { *; }
+-keep class ru.loginovalexeydevelopment.picturefinder.model.entities.* { *; }
 
 -dontobfuscate

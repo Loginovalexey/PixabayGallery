@@ -114,14 +114,6 @@
             <include layout="@layout/divider"/>
 
             <CheckBox
-                android:id="@+id/safeSearchCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/safeSearchChoice" />
-
-            <include layout="@layout/divider"/>
-
-            <CheckBox
                 android:id="@+id/orderСheckBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
